@@ -97,9 +97,6 @@ trait Solver extends GameDef {
    * the first move that the player should perform from the starting
    * position.
    */
-  lazy val solution: List[Move] = {
-    val possibleSolution = pathsToGoal.take(1)
-    if (possibleSolution.isEmpty) List.empty
-    else possibleSolution.head._2.reverse
-  }
+  lazy val solution: List[Move] =
+    pathsToGoal.headOption.map({ case (_, history) => history.reverse }).getOrElse(List.empty)
 }
