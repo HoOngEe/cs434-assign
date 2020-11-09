@@ -91,4 +91,75 @@ class BloxorzSuite extends FunSuite {
       assert(solution.length == optsolution.length)
     }
   }
+
+  trait Level2 extends SolutionChecker {
+    /* terrain for level 2*/
+
+    val level =
+      """------ooooooo--
+        |oooo--ooo--oo--
+        |ooooooooo--oooo
+        |oSoo-------ooTo
+        |oooo-------oooo
+        |------------ooo""".stripMargin
+
+    val optsolution = List(Right, Up, Right, Right ,Right, Up, Left, Down,
+      Right, Up, Up, Right, Right, Right, Down, Down, Down, Right, Up)
+  }
+
+  test("terrain function level 2") {
+    new Level2 {
+      assert(!terrain(Pos(3,7)), "3,7")
+      assert(terrain(Pos(4,11)), "4,11")
+    }
+  }
+
+  test("findChar level 2") {
+    new Level2 {
+      assert(startPos == Pos(3,1))
+      assert(goal == Pos(3, 13))
+    }
+  }
+
+  test("neighbors with history level 2") {
+    new Level2 {
+      val oracle = Set(
+        (Block(Pos(0, 8), Pos(0, 8)), List(Up, Right, Right)),
+        (Block(Pos(1, 7), Pos(2, 7)), List(Left, Right, Right))
+      )
+      val target = neighborsWithHistory(Block(Pos(1, 8), Pos(2, 8)), List(Right, Right))
+      assert(target.toSet == oracle)
+    }
+  }
+
+  test("check on step forward neighbors only for level 2") {
+    new Level2 {
+      val oracle = Stream.empty
+      val neighbors = Set(
+        (Block(Pos(2, 11), Pos(2, 12)), List(Right, Left, Up)),
+        (Block(Pos(1, 8), Pos(2, 8)), List(Right, Down, Left, Up))
+      ).toStream
+      val target = newNeighborsOnly(
+        neighbors flatMap { case (block, history) => neighborsWithHistory(block, history) },
+        Set(
+          Block(Pos(1, 11), Pos(1, 12)), Block(Pos(2, 13), Pos(2, 13)),
+          Block(Pos(3, 11), Pos(3, 12)), Block(Pos(0, 8), Pos(0, 8)),
+          Block(Pos(1, 7), Pos(2, 7))
+        )
+      )
+      assert(target == oracle)
+    }
+  }
+
+  test("optimal solution for level 2") {
+    new Level2 {
+      assert(solve(solution) == Block(goal, goal))
+    }
+  }
+
+  test("optimal solution length for level 2") {
+    new Level2 {
+      assert(solution.length == optsolution.length)
+    }
+  }
 }
