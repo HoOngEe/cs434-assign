@@ -162,4 +162,29 @@ class BloxorzSuite extends FunSuite {
       assert(solution.length == optsolution.length)
     }
   }
+
+  trait LevelUnsolvable extends SolutionChecker {
+    /* terrain for level that is unsolvable*/
+
+    val level =
+      """------ooooooo-
+        |oooo--ooo--oo-
+        |ooooooooo--oT-
+        |oSoo-------ooo
+        |oooo----------""".stripMargin
+
+    val optsolution = List.empty
+  }
+
+  test("no solution for level unsolvable") {
+    new LevelUnsolvable {
+      assert(solve(solution) == startBlock)
+    }
+  }
+
+  test("solution length 0 for level unsolvable") {
+    new LevelUnsolvable {
+      assert(solution.length == optsolution.length)
+    }
+  }
 }
